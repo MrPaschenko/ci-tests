@@ -1,9 +1,7 @@
 name: Go
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
+  commit:
     branches: [ master ]
 
 jobs:
@@ -19,7 +17,10 @@ jobs:
         go-version: 1.18
 
     - name: Build
-      run: go build -v ./...
+      run: implementation.go cmd/example/main.go
+	         mkdir -p out
+	         go build -o out/example ./cmd/example
 
     - name: Test
-      run: go test -v ./...
+      run: 	go vet ./...
+	          go test ./...
