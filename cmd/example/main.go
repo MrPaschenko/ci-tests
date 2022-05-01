@@ -10,7 +10,6 @@ var (
 	inputExpression = flag.String("e", "", "Expression to compute")
 	inputFromFile   = flag.String("f", "", "Expression from file")
 	outputToFile    = flag.String("o", "", "Save results to file")
-	// TODO: Add other flags support for input and output configuration.
 )
 
 func main() {
