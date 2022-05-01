@@ -17,10 +17,7 @@ jobs:
         go-version: 1.18
 
     - name: Build
-      run: implementation.go cmd/example/main.go
-	         mkdir -p out
-	         go build -o out/example ./cmd/example
+      run: go build -o out/example ./cmd/example
 
     - name: Test
-      run: 	go vet ./...
-	          go test ./...
+      run: go test ./...
