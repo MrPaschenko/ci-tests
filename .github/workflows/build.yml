@@ -3,6 +3,8 @@ name: Go
 on:
   push:
     branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
 
@@ -17,7 +19,7 @@ jobs:
         go-version: 1.18
 
     - name: Build
-      run: go run -v ./...
+      run: make out/example
 
     - name: Test
-      run: go test ./...
+      run: make test
