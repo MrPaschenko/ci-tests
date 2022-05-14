@@ -11,36 +11,6 @@ var (
 	// TODO: Add other flags support for input and output configuration.
 )
 
-func isOperator(x) {
-	switch x {
-		case "+":
-		case "-":
-		case "/":
-		case "*":
-		case "^":
-		case "%":
-			return true
-	}
-	return false
-}
-
-// Convert prefix to infix expression
-func prefixToInfix(prefixExpr) {
-
-	// length of expression	
-	length := prefixExpr.size()	
-
-	stack = make([]int, length)
-
-	// reading from right to left
-	for i:= length-1; i >= 0; i-- {
-		// check if symbol is operator
-		if isOperator(prefixExpr[i]) {
-			//var op1 = s.
-		}
-	}
-}
-
 func main() {
 	flag.Parse()
 
