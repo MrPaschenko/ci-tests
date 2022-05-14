@@ -9,31 +9,30 @@ import (
 
 func ImplementationTest(t *testing.T) { TestingT(t) }
 
-func (s *TestSuite) PostToInTest(c *C) {
-// PostToIn means Postfix to Infix
+func (s *TestSuite) prefixToinfixTest(c *C) {
 	examples := map[string]string{
-		"* - 132 14.11 11":           "(132 - 14.11) * 11",
-		"- 14112001 20":              "14112001 - 20",
-		"- 4 3 2":                    "too many operands",
-		"* ^ 2 5 10":                 "2 ^ 5 * 10",
-		"+ * - ^ / - 10 9 8 7 6 5 4": "10 + 9 * (8 - 7 ^ (6 / (5 - 4)))",
-		"Some text":                  "invalid input expression",
-		"- - + 777 - 1901.2021 - 12":   "too many operators",
-		"":                           "invalid input expression",
+		"+ 5 * - 4 2 3":           				"5 + (4 - 2) * 3",
+		"* 7 - 1 * 13 4":              			"7 * (1 - 13 * 4)",
+		"- 4 3 2":                   		    "too many operands",
+		"+ 11 + 22 + 33 + 4 + 5 + 6 + 7 8":     "11 + 22 + 33 + 4 + 5 + 6 + 7 + 8",
+		"/ + * 14 - 15 7 * 3 17 + 10 1":        "(14 * (15 - 7) + 3 * 17) / (10 + 1)",
+		"Some text":               			    "invalid input expression",
+		"- - + 777 - 1901.2021 - 12":   	 	"too many operators",
+		"":                          		    "invalid input expression",
 	}
 
-	for post, expected := range examples {
-		res, err := PostToIn(post)
+	for prefix, infix := range examples {
+		res, err := prefixToinfix(prefix)
 		if err != nil {
-			c.Assert(err, ErrorMatches, expected)
+			c.Assert(err, ErrorMatches, infix)
 		} else {
-			c.Assert(res, Equals, expected)
+			c.Assert(res, Equals, infix)
 		}
 	}
 }
 
 func ExamplePostToIn() {
-	res, err := PostToIn("14 11 + 1 ^")
+	res, err := prefixToinfix("14 11 + 1 ^")
 	if err != nil {
 		panic(err)
 	} else {
