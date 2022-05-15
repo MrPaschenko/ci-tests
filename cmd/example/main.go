@@ -2,8 +2,10 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	lab2 "github.com/MrPaschenko/ci-tests"
+	"io"
+	"os"
+	"strings"
 )
 
 var (
@@ -15,21 +17,42 @@ var (
 func main() {
 	flag.Parse()
 
-	// TODO: Change this to accept input from the command line arguments as described in the task and
-	//       output the results using the ComputeHandler instance.
+	var input io.Reader = nil
+	var output = os.Stdout
+
+	if *inputExpression != "" {
+		input = strings.NewReader(*inputExpression)
+	}
+
+	if *inputFromFile != "" {
+		f, err := os.Open(*inputFromFile)
+		if err != nil {
+			os.Stderr.WriteString("Error")
+		}
+		defer f.Close()
+		input = f
+	}
+
+	if *outputToFile != "" {
+		f, err := os.Create(*outputToFile)
+		if err != nil {
+			os.Stderr.WriteString("Error")
+		}
+		defer f.Close()
+		output = f
+	}
+
+	if input == nil {
+		os.Stderr.WriteString("No stdIn defined")
+		return
+	}
+
 	handler := &lab2.ComputeHandler{
-		//Input: {
-		//	//construct io.Reader according the command line parameters
-		//},
-		//Output: {
-		//	//construct io.Writer according the command line parameters
-		//},
+		Input:  input,
+		Output: output,
 	}
 	err := handler.Compute()
 	if err != nil {
 		println(err) // print err to stderr
 	}
-
-	res, _ := lab2.PrefixToPostfix("+ 2 2")
-	fmt.Println(res)
 }
