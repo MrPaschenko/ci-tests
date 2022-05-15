@@ -2,10 +2,13 @@ package lab2
 
 import (
 	"fmt"
+	_ "gopkg.in/check.v1"
 	"testing"
 )
 
 func ImplementationTest(t *testing.T) { TestingT(t) }
+
+type TestSuite struct{}
 
 func (s *TestSuite) prefixToinfixTest(c *C) {
 	examples := map[string]string{
