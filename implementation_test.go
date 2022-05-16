@@ -4,20 +4,43 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	_ "gopkg.in/check.v1"
 )
 
-func TestPrefixToPostfix(t *testing.T) {
-	res, err := PrefixToPostfix("+ 5 * - 4 2 3")
-	if assert.Nil(t, err) {
-		assert.Equal(t, "4 2 - 3 * 5 +", res)
+func ImplementationTest(t *testing.T) { TestingT(t) }
+
+type TestSuite struct{}
+
+func (s *TestSuite) prefixToinfixTest(c *C) {
+	examples := map[string]string{
+		"+ 5 * - 4 2 3":                    "5 + (4 - 2) * 3",
+		"* 7 - 1 * 13 4":                   "7 * (1 - 13 * 4)",
+		"- 4 3 2":                          "too many operands",
+		"+ 11 + 22 + 33 + 4 + 5 + 6 + 7 8": "11 + 22 + 33 + 4 + 5 + 6 + 7 + 8",
+		"/ + * 14 - 15 7 * 3 17 + 10 1":    "(14 * (15 - 7) + 3 * 17) / (10 + 1)",
+		"Some text":                        "invalid input expression",
+		"- - + 777 - 1901.2021 - 12":       "too many operators",
+		"":                                 "invalid input expression",
+	}
+
+	for prefix, infix := range examples {
+		res, err := prefixToinfix(prefix)
+		if err != nil {
+			c.Assert(err, ErrorMatches, infix)
+		} else {
+			c.Assert(res, Equals, infix)
+		}
 	}
 }
 
-func ExamplePrefixToPostfix() {
-	res, _ := PrefixToPostfix("+ 2 2")
-	fmt.Println(res)
+func ExamplePostToIn() {
+	res, err := prefixToinfix("14 11 + 1 ^")
+	if err != nil {
+		panic(err)
+	} else {
+		fmt.Println(res)
+	}
 
-	// Output:
-	// 2 2 +
+	// expected output:
+	// (14 + 11) ^ 1
 }
