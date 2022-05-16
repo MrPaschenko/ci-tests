@@ -20,6 +20,7 @@ func main() {
 	var input io.Reader = nil
 	var output = os.Stdout
 
+
 	if *inputExpression != "" {
 		input = strings.NewReader(*inputExpression)
 	}
