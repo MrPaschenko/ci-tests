@@ -71,7 +71,7 @@ func isOperands(text byte) bool {
 	return false
 }
 
-func prefixToinfix(prefix string) {
+func prefixToinfix(prefix string) string {
 	var size int = len(prefix)
 	var s * MyStack = getMyStack()
 	var auxiliary string = ""
@@ -96,17 +96,6 @@ func prefixToinfix(prefix string) {
 			isValid = false
 		}
 	}
-	if isValid == false {
-		fmt.Println("Invalid Prefix : ", prefix)
-	} else {
-		fmt.Println(" Prefix : ", prefix)
-		fmt.Println(" Infix  : ", s.pop())
-	}
-}
-func main() {
-	
-	var prefix string = "+*ab^cd"
-	prefixToinfix(prefix)
-	prefix = "-+*^%adcex*y^ab"
-	prefixToinfix(prefix)
+	infix := s.pop()
+	return infix
 }
