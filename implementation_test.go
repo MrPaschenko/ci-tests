@@ -2,9 +2,8 @@ package lab2
 
 import (
 	"fmt"
-	"testing"
-
 	_ "gopkg.in/check.v1"
+	"testing"
 )
 
 func ImplementationTest(t *testing.T) { TestingT(t) }
