@@ -1,7 +1,5 @@
 package lab2
 
-import "fmt"
-
 type StackNode struct {
 	data string
 	next *StackNode
@@ -82,7 +80,6 @@ func prefixToinfix(prefix string) (string, error) {
 	var auxiliary string = ""
 	var op1 string = ""
 	var op2 string = ""
-	var isValid bool = true
 	for i := size - 1; i >= 0; i-- {
 		if isOperator(prefix[i]) {
 			if s.size() > 1 {
@@ -91,18 +88,11 @@ func prefixToinfix(prefix string) (string, error) {
 				auxiliary = "(" + op1 +
 					string(prefix[i]) + op2 + ")"
 				s.push(auxiliary)
-			} else {
-				isValid = false
 			}
 		} else if isOperands(prefix[i]) {
 			auxiliary = string(prefix[i])
 			s.push(auxiliary)
-		} else {
-			isValid = false
 		}
-	}
-	if isValid == false {
-		return "", fmt.Errorf("something is wrong")
 	}
 	infix := s.pop()
 	return infix, nil
