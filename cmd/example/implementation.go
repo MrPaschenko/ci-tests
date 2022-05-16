@@ -1,30 +1,35 @@
 package lab2
+
 import "fmt"
+
 type StackNode struct {
 	data string
-	next * StackNode
+	next *StackNode
 }
-func getStackNode(data string, top * StackNode) * StackNode {
-	return &StackNode {
+
+func getStackNode(data string, top *StackNode) *StackNode {
+	return &StackNode{
 		data,
 		top,
 	}
 }
+
 type MyStack struct {
-	top * StackNode
+	top   *StackNode
 	count int
 }
-func getMyStack() * MyStack {
-	return &MyStack {
+
+func getMyStack() *MyStack {
+	return &MyStack{
 		nil,
 		0,
 	}
 }
 
-func(this MyStack) size() int {
+func (this MyStack) size() int {
 	return this.count
 }
-func(this MyStack) isEmpty() bool {
+func (this MyStack) isEmpty() bool {
 	if this.size() > 0 {
 		return false
 	} else {
@@ -32,11 +37,11 @@ func(this MyStack) isEmpty() bool {
 	}
 }
 
-func(this *MyStack) push(data string) {
+func (this *MyStack) push(data string) {
 	this.top = getStackNode(data, this.top)
 	this.count++
 }
-func(this *MyStack) pop() string {
+func (this *MyStack) pop() string {
 	var temp string = ""
 	if this.isEmpty() == false {
 		temp = this.top.data
@@ -46,7 +51,7 @@ func(this *MyStack) pop() string {
 	return temp
 }
 
-func(this MyStack) peek() string {
+func (this MyStack) peek() string {
 	if !this.isEmpty() {
 		return this.top.data
 	} else {
@@ -55,7 +60,7 @@ func(this MyStack) peek() string {
 }
 
 func isOperator(text byte) bool {
-	if text == '+' || text == '-' || text == '*' || 
+	if text == '+' || text == '-' || text == '*' ||
 		text == '/' || text == '^' || text == '%' {
 		return true
 	}
@@ -63,28 +68,28 @@ func isOperator(text byte) bool {
 }
 
 func isOperands(text byte) bool {
-	if (text >= '0' && text <= '9') || 
-	   (text >= 'a' && text <= 'z') || 
-	   (text >= 'A' && text <= 'Z') {
+	if (text >= '0' && text <= '9') ||
+		(text >= 'a' && text <= 'z') ||
+		(text >= 'A' && text <= 'Z') {
 		return true
 	}
 	return false
 }
 
-func prefixToinfix(prefix string) string {
+func prefixToinfix(prefix string) (string, error) {
 	var size int = len(prefix)
-	var s * MyStack = getMyStack()
+	var s *MyStack = getMyStack()
 	var auxiliary string = ""
 	var op1 string = ""
 	var op2 string = ""
 	var isValid bool = true
-	for i := size - 1 ; i >= 0 ; i-- {
+	for i := size - 1; i >= 0; i-- {
 		if isOperator(prefix[i]) {
 			if s.size() > 1 {
 				op1 = s.pop()
 				op2 = s.pop()
-				auxiliary = "(" + op1 + 
-				string(prefix[i]) + op2 + ")"
+				auxiliary = "(" + op1 +
+					string(prefix[i]) + op2 + ")"
 				s.push(auxiliary)
 			} else {
 				isValid = false
@@ -96,6 +101,9 @@ func prefixToinfix(prefix string) string {
 			isValid = false
 		}
 	}
+	if isValid == false {
+		return "", fmt.Errorf("something is wrong")
+	}
 	infix := s.pop()
-	return infix
+	return infix, nil
 }
