@@ -17,7 +17,7 @@ func (ch *ComputeHandler) Compute() error {
 			break
 		}
 	}
-	result, err := prefixToinfix(string(s))
+	result, err := PrefixToInfix(string(s))
 	if err != nil {
 		return err
 	}

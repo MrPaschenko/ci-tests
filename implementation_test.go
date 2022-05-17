@@ -16,16 +16,16 @@ func (s *TestSuite) TestPrefixToInfix(c *C) {
 	examples := map[string]string{
 		"+ 5 * - 4 2 3":                    "5 + (4 - 2) * 3",
 		"* 7 - 1 * 13 4":                   "7 * (1 - 13 * 4)",
-		"- 4 3 2":                          "too many operands",
+		"- 4 3 2":                          "invalid input expression",
 		"+ 11 + 22 + 33 + 4 + 5 + 6 + 7 8": "11 + 22 + 33 + 4 + 5 + 6 + 7 + 8",
 		"/ + * 14 - 15 7 * 3 17 + 10 1":    "(14 * (15 - 7) + 3 * 17) / (10 + 1)",
 		"Some text":                        "invalid input expression",
-		"- - + 777 - 1901.2021 - 12":       "too many operators",
+		"- - + 777 - 1901.2021 - 12":       "invalid input expression",
 		"":                                 "invalid input expression",
 	}
 
 	for prefix, infix := range examples {
-		res, err := prefixToinfix(prefix)
+		res, err := PrefixToInfix(prefix)
 		if err != nil {
 			c.Assert(err, ErrorMatches, infix)
 		} else {
@@ -34,14 +34,11 @@ func (s *TestSuite) TestPrefixToInfix(c *C) {
 	}
 }
 
-func ExamplePostToIn() {
-	res, err := prefixToinfix("14 11 + 1 ^")
+func ExamplePrefixToInfix() {
+	res, err := PrefixToInfix("14 11 + 1 ^")
 	if err != nil {
 		panic(err)
 	} else {
 		fmt.Println(res)
 	}
-
-	// expected output:
-	// (14 + 11) ^ 1
 }

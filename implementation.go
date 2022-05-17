@@ -1,99 +1,63 @@
 package lab2
 
-type StackNode struct {
-	data string
-	next *StackNode
-}
+import (
+	"fmt"
+	"strings"
+)
 
-func getStackNode(data string, top *StackNode) *StackNode {
-	return &StackNode{
-		data,
-		top,
+func PrefixToInfix(input string) (string, error) {
+	var stack []string
+	const operators = "+-*/"
+
+	if len(input) == 0 {
+		return "", fmt.Errorf("invalid input expression")
 	}
-}
 
-type MyStack struct {
-	top   *StackNode
-	count int
-}
+	var inputs = strings.Split(input, " ")
 
-func getMyStack() *MyStack {
-	return &MyStack{
-		nil,
-		0,
-	}
-}
+	var literal = "" 
+	var e1 = ""      
+	var e2 = ""      
 
-func (this MyStack) size() int {
-	return this.count
-}
-func (this MyStack) isEmpty() bool {
-	if this.size() > 0 {
-		return false
-	} else {
-		return true
-	}
-}
+	for i := len(inputs) - 1; i >= 0; i-- {
+		literal = inputs[i]
 
-func (this *MyStack) push(data string) {
-	this.top = getStackNode(data, this.top)
-	this.count++
-}
-func (this *MyStack) pop() string {
-	var temp string = ""
-	if this.isEmpty() == false {
-		temp = this.top.data
-		this.top = this.top.next
-		this.count--
-	}
-	return temp
-}
-
-func (this MyStack) peek() string {
-	if !this.isEmpty() {
-		return this.top.data
-	} else {
-		return ""
-	}
-}
-
-func isOperator(text byte) bool {
-	if text == '+' || text == '-' || text == '*' ||
-		text == '/' || text == '^' || text == '%' {
-		return true
-	}
-	return false
-}
-
-func isOperands(text byte) bool {
-	if (text >= '0' && text <= '9') ||
-		(text >= 'a' && text <= 'z') ||
-		(text >= 'A' && text <= 'Z') {
-		return true
-	}
-	return false
-}
-
-func prefixToinfix(prefix string) (string, error) {
-	var size int = len(prefix)
-	var s *MyStack = getMyStack()
-	var auxiliary string = ""
-	var op1 string = ""
-	var op2 string = ""
-	for i := size - 1; i >= 0; i-- {
-		if isOperator(prefix[i]) {
-			if s.size() > 1 {
-				op1 = s.pop()
-				op2 = s.pop()
-				auxiliary = "(" + op1 +
-					string(prefix[i]) + op2 + ")"
-				s.push(auxiliary)
+		if !strings.Contains(operators, literal) {
+			stack = append(stack, literal)
+		} else {
+			if len(stack) < 2 {
+				return "", fmt.Errorf("invalid input expression")
 			}
-		} else if isOperands(prefix[i]) {
-			auxiliary = string(prefix[i])
-			s.push(auxiliary)
+
+			e1, stack = Pop(stack)
+			e2, stack = Pop(stack)
+
+			if strings.Contains(e1, " ") && strings.Contains("*/", literal) {
+				e1 = "(" + e1 + ")"
+			}
+			if strings.Contains(e2, " ") && strings.Contains("*/", literal) {
+				e2 = "(" + e2 + ")"
+			}
+
+			var new = e1 + " " + literal + " " + e2
+			stack = append(stack, new)
 		}
 	}
-	infix := s.pop()
-	return infix, nil
+
+	var res = ""
+	res, stack = Pop(stack)
+
+	if len(stack) > 0 {
+		return "", fmt.Errorf("invalid input expression")
+	}
+
+	return res, nil
+}
+
+func Pop(s []string) (string, []string) {
+	if len(s) == 0 {
+		return "", []string{}
+	}
+
+	return s[len(s)-1], s[:len(s)-1]
 }
