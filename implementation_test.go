@@ -6,11 +6,13 @@ import (
 	"testing"
 )
 
-func ImplementationTest(t *testing.T) { TestingT(t) }
+func Test(t *testing.T) { TestingT(t) }
 
 type TestSuite struct{}
 
-func (s *TestSuite) prefixToinfixTest(c *C) {
+var _ = Suite(&TestSuite{})
+
+func (s *TestSuite) TestPrefixToInfix(c *C) {
 	examples := map[string]string{
 		"+ 5 * - 4 2 3":                    "5 + (4 - 2) * 3",
 		"* 7 - 1 * 13 4":                   "7 * (1 - 13 * 4)",
